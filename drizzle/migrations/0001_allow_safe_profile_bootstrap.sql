@@ -1,0 +1,2 @@
+GRANT INSERT ON public.user_roles TO authenticated;
+CREATE POLICY "Users can bootstrap standard role" ON public.user_roles FOR INSERT TO authenticated WITH CHECK (user_id = auth.uid() AND role = 'user');

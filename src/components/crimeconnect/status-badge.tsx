@@ -1,0 +1,3 @@
+import { cn } from "@/lib/utils";
+
+export function StatusBadge({status}:{status:string}) { const resolved=status.toLowerCase().includes("resolved"); const review=status.toLowerCase().includes("review"); return <span className={cn("inline-flex rounded-full border px-2.5 py-1 text-xs font-bold",resolved?"border-success/30 bg-success/10 text-success":review?"border-primary/30 bg-primary/10 text-primary":"border-border bg-secondary text-muted-foreground")}>{status}</span>; }
