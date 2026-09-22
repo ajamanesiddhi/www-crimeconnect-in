@@ -14,16 +14,281 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      incident_photos: {
+        Row: {
+          created_at: string
+          id: string
+          incident_id: string
+          mime_type: string
+          size_bytes: number
+          storage_path: string
+          uploader_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          incident_id: string
+          mime_type: string
+          size_bytes: number
+          storage_path: string
+          uploader_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          incident_id?: string
+          mime_type?: string
+          size_bytes?: number
+          storage_path?: string
+          uploader_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "incident_photos_incident_id_fkey"
+            columns: ["incident_id"]
+            isOneToOne: false
+            referencedRelation: "incidents"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      incident_reviews: {
+        Row: {
+          created_at: string
+          id: string
+          incident_id: string
+          new_status: Database["public"]["Enums"]["incident_status"]
+          notes: string
+          previous_status: Database["public"]["Enums"]["incident_status"] | null
+          reviewer_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          incident_id: string
+          new_status: Database["public"]["Enums"]["incident_status"]
+          notes: string
+          previous_status?:
+            | Database["public"]["Enums"]["incident_status"]
+            | null
+          reviewer_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          incident_id?: string
+          new_status?: Database["public"]["Enums"]["incident_status"]
+          notes?: string
+          previous_status?:
+            | Database["public"]["Enums"]["incident_status"]
+            | null
+          reviewer_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "incident_reviews_incident_id_fkey"
+            columns: ["incident_id"]
+            isOneToOne: false
+            referencedRelation: "incidents"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      incidents: {
+        Row: {
+          created_at: string
+          description: string
+          id: string
+          incident_type: string
+          institution_id: string | null
+          is_demo: boolean
+          landmark: string
+          latitude: number
+          longitude: number
+          occurred_at: string
+          report_id: string
+          reporter_id: string
+          status: Database["public"]["Enums"]["incident_status"]
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description: string
+          id?: string
+          incident_type: string
+          institution_id?: string | null
+          is_demo?: boolean
+          landmark: string
+          latitude: number
+          longitude: number
+          occurred_at: string
+          report_id?: string
+          reporter_id: string
+          status?: Database["public"]["Enums"]["incident_status"]
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          id?: string
+          incident_type?: string
+          institution_id?: string | null
+          is_demo?: boolean
+          landmark?: string
+          latitude?: number
+          longitude?: number
+          occurred_at?: string
+          report_id?: string
+          reporter_id?: string
+          status?: Database["public"]["Enums"]["incident_status"]
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "incidents_institution_id_fkey"
+            columns: ["institution_id"]
+            isOneToOne: false
+            referencedRelation: "institutions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      institutions: {
+        Row: {
+          city: string
+          created_at: string
+          id: string
+          name: string
+          state: string
+        }
+        Insert: {
+          city: string
+          created_at?: string
+          id?: string
+          name: string
+          state: string
+        }
+        Update: {
+          city?: string
+          created_at?: string
+          id?: string
+          name?: string
+          state?: string
+        }
+        Relationships: []
+      }
+      notifications: {
+        Row: {
+          created_at: string
+          id: string
+          is_read: boolean
+          message: string
+          title: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          is_read?: boolean
+          message: string
+          title: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          is_read?: boolean
+          message?: string
+          title?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          authorized_area: string | null
+          avatar_url: string | null
+          created_at: string
+          display_name: string
+          id: string
+          institution_id: string | null
+          notification_preferences: Json
+          phone: string | null
+          updated_at: string
+        }
+        Insert: {
+          authorized_area?: string | null
+          avatar_url?: string | null
+          created_at?: string
+          display_name: string
+          id: string
+          institution_id?: string | null
+          notification_preferences?: Json
+          phone?: string | null
+          updated_at?: string
+        }
+        Update: {
+          authorized_area?: string | null
+          avatar_url?: string | null
+          created_at?: string
+          display_name?: string
+          id?: string
+          institution_id?: string | null
+          notification_preferences?: Json
+          phone?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "profiles_institution_id_fkey"
+            columns: ["institution_id"]
+            isOneToOne: false
+            referencedRelation: "institutions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
+      same_institution: {
+        Args: { _institution_id: string; _user_id: string }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "user" | "security_officer" | "principal" | "admin"
+      incident_status: "submitted" | "under_review" | "referred" | "resolved"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +415,9 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["user", "security_officer", "principal", "admin"],
+      incident_status: ["submitted", "under_review", "referred", "resolved"],
+    },
   },
 } as const
