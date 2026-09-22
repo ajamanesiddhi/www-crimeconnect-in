@@ -7,6 +7,7 @@ Build CrimeConnect as a polished, responsive community-safety platform with a pu
 - Establish the dark navy, royal blue, white, emergency red, and verified green design system with clean modern typography.
 - Build the CrimeConnect shield-and-pin identity, responsive navigation, hero illustration, floating safety cards, feature grid, four-step workflow, clearly labeled demo metrics, emergency notice, and polished footer.
 - Add dedicated How It Works, About, Privacy Policy, Terms of Use, and Emergency Help pages with unique page titles and descriptions.
+- Feature India’s emergency number 112 prominently, with the notice that CrimeConnect is not an emergency response service or replacement for emergency services.
 - Apply restrained entrance, counter, card, and page transitions with reduced-motion support.
 
 ## Stage 2 — Secure Accounts and Role Access
@@ -14,6 +15,7 @@ Build CrimeConnect as a polished, responsive community-safety platform with a pu
 - Build split-screen sign-in, user registration, forgot-password, and password-reset experiences.
 - Store full profiles, institution membership, and roles separately; new registrations receive only the standard user role.
 - Prevent self-selection of Security Officer or Principal access. Privileged roles require an existing administrator-approved role assignment.
+- Create clearly labeled presentation accounts for User, Security Officer, and Principal through authorized setup; never expose their credentials in public page content or allow privileged self-registration.
 - Route authenticated people to the correct workspace and provide reliable sign-out behavior.
 
 ## Stage 3 — Role-Based Workspaces
@@ -21,6 +23,7 @@ Build CrimeConnect as a polished, responsive community-safety platform with a pu
 - User workspace: summary, report shortcut, status counts, recent reports, and tracking timeline.
 - Security Officer workspace: command-center summary, review queue, incident table, filters, details, evidence review, notes, and status updates limited to authorized areas.
 - Principal workspace: institution-only safety overview, locations, reports, pending reviews, awareness summary, and authorized review controls.
+- Add D. Y. Patil College of Engineering, Kolhapur as the demo institution and scope its Principal presentation account to college-related reports only.
 - Include demo presentation data where no account data exists, always labeled as demo.
 
 ## Stage 4 — Reporting, Evidence, and Location
@@ -41,3 +44,4 @@ Build CrimeConnect as a polished, responsive community-safety platform with a pu
 - Apply row-level policies, separate role records, server-side input validation, audit timestamps, and institution/area authorization checks.
 - Use Leaflet with OpenStreetMap tiles and marker clustering; load the map client-side to preserve server rendering.
 - Seed only clearly labeled fictional demonstration incidents and locations.
+- Seed the demo institution and role-specific presentation accounts through controlled setup, with fictional reports tied to the authorized institution or officer area.
