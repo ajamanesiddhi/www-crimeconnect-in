@@ -8,6 +8,13 @@
       "when": 1790086686305,
       "tag": "0000_create_crimeconnect_schema",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1790086770764,
+      "tag": "0001_allow_safe_profile_bootstrap",
+      "breakpoints": true
     }
   ]
 }
