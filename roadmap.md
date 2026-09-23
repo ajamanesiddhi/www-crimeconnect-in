@@ -8,3 +8,6 @@
 - [ ] Build privacy-preserving safety map
 - [ ] Add About, How It Works, Privacy, Terms, and Emergency Help pages
 - [ ] Validate responsive layout, access controls, loading, and errors
+- [ ] Harden incident evidence and review-note access policies
+- [ ] Audit role assignment and all privileged database functions
+- [ ] Run and review a fresh security scan before publishing
