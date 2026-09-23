@@ -19,10 +19,12 @@ import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
 import { Route as HowItWorksRouteImport } from './routes/how-it-works'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
+import { Route as SafetyMapRouteImport } from './routes/safety-map'
 import { Route as TermsRouteImport } from './routes/terms'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedOfficerRouteImport } from './routes/_authenticated/officer'
 import { Route as AuthenticatedPrincipalRouteImport } from './routes/_authenticated/principal'
+import { Route as AuthenticatedReportRouteImport } from './routes/_authenticated/report'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -73,6 +75,11 @@ const ResetPasswordRoute = ResetPasswordRouteImport.update({
   path: '/reset-password',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SafetyMapRoute = SafetyMapRouteImport.update({
+  id: '/safety-map',
+  path: '/safety-map',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const TermsRoute = TermsRouteImport.update({
   id: '/terms',
   path: '/terms',
@@ -93,6 +100,11 @@ const AuthenticatedPrincipalRoute = AuthenticatedPrincipalRouteImport.update({
   path: '/principal',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedReportRoute = AuthenticatedReportRouteImport.update({
+  id: '/report',
+  path: '/report',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -104,10 +116,12 @@ export interface FileRoutesByFullPath {
   '/how-it-works': typeof HowItWorksRoute
   '/privacy': typeof PrivacyRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/safety-map': typeof SafetyMapRoute
   '/terms': typeof TermsRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/officer': typeof AuthenticatedOfficerRoute
   '/principal': typeof AuthenticatedPrincipalRoute
+  '/report': typeof AuthenticatedReportRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -119,10 +133,12 @@ export interface FileRoutesByTo {
   '/how-it-works': typeof HowItWorksRoute
   '/privacy': typeof PrivacyRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/safety-map': typeof SafetyMapRoute
   '/terms': typeof TermsRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/officer': typeof AuthenticatedOfficerRoute
   '/principal': typeof AuthenticatedPrincipalRoute
+  '/report': typeof AuthenticatedReportRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -136,10 +152,12 @@ export interface FileRoutesById {
   '/how-it-works': typeof HowItWorksRoute
   '/privacy': typeof PrivacyRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/safety-map': typeof SafetyMapRoute
   '/terms': typeof TermsRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/officer': typeof AuthenticatedOfficerRoute
   '/_authenticated/principal': typeof AuthenticatedPrincipalRoute
+  '/_authenticated/report': typeof AuthenticatedReportRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -153,10 +171,12 @@ export interface FileRouteTypes {
     | '/how-it-works'
     | '/privacy'
     | '/reset-password'
+    | '/safety-map'
     | '/terms'
     | '/dashboard'
     | '/officer'
     | '/principal'
+    | '/report'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -168,10 +188,12 @@ export interface FileRouteTypes {
     | '/how-it-works'
     | '/privacy'
     | '/reset-password'
+    | '/safety-map'
     | '/terms'
     | '/dashboard'
     | '/officer'
     | '/principal'
+    | '/report'
   id:
     | '__root__'
     | '/'
@@ -184,10 +206,12 @@ export interface FileRouteTypes {
     | '/how-it-works'
     | '/privacy'
     | '/reset-password'
+    | '/safety-map'
     | '/terms'
     | '/_authenticated/dashboard'
     | '/_authenticated/officer'
     | '/_authenticated/principal'
+    | '/_authenticated/report'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -201,6 +225,7 @@ export interface RootRouteChildren {
   HowItWorksRoute: typeof HowItWorksRoute
   PrivacyRoute: typeof PrivacyRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
+  SafetyMapRoute: typeof SafetyMapRoute
   TermsRoute: typeof TermsRoute
 }
 
@@ -276,6 +301,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ResetPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/safety-map': {
+      id: '/safety-map'
+      path: '/safety-map'
+      fullPath: '/safety-map'
+      preLoaderRoute: typeof SafetyMapRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/terms': {
       id: '/terms'
       path: '/terms'
@@ -304,6 +336,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedPrincipalRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/report': {
+      id: '/_authenticated/report'
+      path: '/report'
+      fullPath: '/report'
+      preLoaderRoute: typeof AuthenticatedReportRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
   }
 }
 
@@ -311,12 +350,14 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedOfficerRoute: typeof AuthenticatedOfficerRoute
   AuthenticatedPrincipalRoute: typeof AuthenticatedPrincipalRoute
+  AuthenticatedReportRoute: typeof AuthenticatedReportRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedOfficerRoute: AuthenticatedOfficerRoute,
   AuthenticatedPrincipalRoute: AuthenticatedPrincipalRoute,
+  AuthenticatedReportRoute: AuthenticatedReportRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =
@@ -333,6 +374,7 @@ const rootRouteChildren: RootRouteChildren = {
   HowItWorksRoute: HowItWorksRoute,
   PrivacyRoute: PrivacyRoute,
   ResetPasswordRoute: ResetPasswordRoute,
+  SafetyMapRoute: SafetyMapRoute,
   TermsRoute: TermsRoute,
 }
 export const routeTree = rootRouteImport
