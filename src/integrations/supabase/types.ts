@@ -96,6 +96,10 @@ export type Database = {
       }
       incidents: {
         Row: {
+          acknowledged_at: string | null
+          acknowledged_by: string | null
+          address: string | null
+          category: string
           created_at: string
           description: string
           id: string
@@ -104,14 +108,20 @@ export type Database = {
           is_demo: boolean
           landmark: string
           latitude: number
+          location_captured_at: string | null
           longitude: number
           occurred_at: string
           report_id: string
           reporter_id: string
+          reporter_role: string
           status: Database["public"]["Enums"]["incident_status"]
           updated_at: string
         }
         Insert: {
+          acknowledged_at?: string | null
+          acknowledged_by?: string | null
+          address?: string | null
+          category?: string
           created_at?: string
           description: string
           id?: string
@@ -120,14 +130,20 @@ export type Database = {
           is_demo?: boolean
           landmark: string
           latitude: number
+          location_captured_at?: string | null
           longitude: number
           occurred_at: string
           report_id?: string
           reporter_id: string
+          reporter_role?: string
           status?: Database["public"]["Enums"]["incident_status"]
           updated_at?: string
         }
         Update: {
+          acknowledged_at?: string | null
+          acknowledged_by?: string | null
+          address?: string | null
+          category?: string
           created_at?: string
           description?: string
           id?: string
@@ -136,10 +152,12 @@ export type Database = {
           is_demo?: boolean
           landmark?: string
           latitude?: number
+          location_captured_at?: string | null
           longitude?: number
           occurred_at?: string
           report_id?: string
           reporter_id?: string
+          reporter_role?: string
           status?: Database["public"]["Enums"]["incident_status"]
           updated_at?: string
         }
@@ -181,7 +199,9 @@ export type Database = {
         Row: {
           created_at: string
           id: string
+          incident_id: string | null
           is_read: boolean
+          kind: string
           message: string
           title: string
           user_id: string
@@ -189,7 +209,9 @@ export type Database = {
         Insert: {
           created_at?: string
           id?: string
+          incident_id?: string | null
           is_read?: boolean
+          kind?: string
           message: string
           title: string
           user_id: string
@@ -197,12 +219,22 @@ export type Database = {
         Update: {
           created_at?: string
           id?: string
+          incident_id?: string | null
           is_read?: boolean
+          kind?: string
           message?: string
           title?: string
           user_id?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "notifications_incident_id_fkey"
+            columns: ["incident_id"]
+            isOneToOne: false
+            referencedRelation: "incidents"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       profiles: {
         Row: {
@@ -247,6 +279,27 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      push_tokens: {
+        Row: {
+          created_at: string
+          id: string
+          token: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          token: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          token?: string
+          user_id?: string
+        }
+        Relationships: []
       }
       user_roles: {
         Row: {
