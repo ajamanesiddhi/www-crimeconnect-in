@@ -10,7 +10,7 @@ import { toast } from "sonner";
 
 const LocationMap = lazy(() => import("@/components/crimeconnect/location-map"));
 
-export const Route = createFileRoute("/_authenticated/principal")({
+export const Route = createFileRoute("/_authenticated/principal-dashboard")({
   beforeLoad: ({ context }) => { if (!context.roles.includes("principal") && !context.roles.includes("admin")) throw redirect({ to: "/dashboard" }); },
   head: () => ({ meta: [{ title: "Institution Safety — CrimeConnect" }, { name: "description", content: "Institution-scoped safety overview with real-time incident alerts." }, { property: "og:title", content: "CrimeConnect Principal Dashboard" }, { property: "og:description", content: "Institution-authorized safety monitoring." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" }] }),
   component: Page,

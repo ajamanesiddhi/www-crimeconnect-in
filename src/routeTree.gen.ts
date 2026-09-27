@@ -21,10 +21,10 @@ import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as SafetyMapRouteImport } from './routes/safety-map'
 import { Route as TermsRouteImport } from './routes/terms'
-import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
-import { Route as AuthenticatedOfficerRouteImport } from './routes/_authenticated/officer'
-import { Route as AuthenticatedPrincipalRouteImport } from './routes/_authenticated/principal'
+import { Route as AuthenticatedPrincipalDashboardRouteImport } from './routes/_authenticated/principal-dashboard'
 import { Route as AuthenticatedReportRouteImport } from './routes/_authenticated/report'
+import { Route as AuthenticatedSecurityDashboardRouteImport } from './routes/_authenticated/security-dashboard'
+import { Route as AuthenticatedUserDashboardRouteImport } from './routes/_authenticated/user-dashboard'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -85,26 +85,29 @@ const TermsRoute = TermsRouteImport.update({
   path: '/terms',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
-  id: '/dashboard',
-  path: '/dashboard',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
-const AuthenticatedOfficerRoute = AuthenticatedOfficerRouteImport.update({
-  id: '/officer',
-  path: '/officer',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
-const AuthenticatedPrincipalRoute = AuthenticatedPrincipalRouteImport.update({
-  id: '/principal',
-  path: '/principal',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
+const AuthenticatedPrincipalDashboardRoute =
+  AuthenticatedPrincipalDashboardRouteImport.update({
+    id: '/principal-dashboard',
+    path: '/principal-dashboard',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedReportRoute = AuthenticatedReportRouteImport.update({
   id: '/report',
   path: '/report',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedSecurityDashboardRoute =
+  AuthenticatedSecurityDashboardRouteImport.update({
+    id: '/security-dashboard',
+    path: '/security-dashboard',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedUserDashboardRoute =
+  AuthenticatedUserDashboardRouteImport.update({
+    id: '/user-dashboard',
+    path: '/user-dashboard',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -118,10 +121,10 @@ export interface FileRoutesByFullPath {
   '/reset-password': typeof ResetPasswordRoute
   '/safety-map': typeof SafetyMapRoute
   '/terms': typeof TermsRoute
-  '/dashboard': typeof AuthenticatedDashboardRoute
-  '/officer': typeof AuthenticatedOfficerRoute
-  '/principal': typeof AuthenticatedPrincipalRoute
+  '/principal-dashboard': typeof AuthenticatedPrincipalDashboardRoute
   '/report': typeof AuthenticatedReportRoute
+  '/security-dashboard': typeof AuthenticatedSecurityDashboardRoute
+  '/user-dashboard': typeof AuthenticatedUserDashboardRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -135,10 +138,10 @@ export interface FileRoutesByTo {
   '/reset-password': typeof ResetPasswordRoute
   '/safety-map': typeof SafetyMapRoute
   '/terms': typeof TermsRoute
-  '/dashboard': typeof AuthenticatedDashboardRoute
-  '/officer': typeof AuthenticatedOfficerRoute
-  '/principal': typeof AuthenticatedPrincipalRoute
+  '/principal-dashboard': typeof AuthenticatedPrincipalDashboardRoute
   '/report': typeof AuthenticatedReportRoute
+  '/security-dashboard': typeof AuthenticatedSecurityDashboardRoute
+  '/user-dashboard': typeof AuthenticatedUserDashboardRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -154,10 +157,10 @@ export interface FileRoutesById {
   '/reset-password': typeof ResetPasswordRoute
   '/safety-map': typeof SafetyMapRoute
   '/terms': typeof TermsRoute
-  '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
-  '/_authenticated/officer': typeof AuthenticatedOfficerRoute
-  '/_authenticated/principal': typeof AuthenticatedPrincipalRoute
+  '/_authenticated/principal-dashboard': typeof AuthenticatedPrincipalDashboardRoute
   '/_authenticated/report': typeof AuthenticatedReportRoute
+  '/_authenticated/security-dashboard': typeof AuthenticatedSecurityDashboardRoute
+  '/_authenticated/user-dashboard': typeof AuthenticatedUserDashboardRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -173,10 +176,10 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/safety-map'
     | '/terms'
-    | '/dashboard'
-    | '/officer'
-    | '/principal'
+    | '/principal-dashboard'
     | '/report'
+    | '/security-dashboard'
+    | '/user-dashboard'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -190,10 +193,10 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/safety-map'
     | '/terms'
-    | '/dashboard'
-    | '/officer'
-    | '/principal'
+    | '/principal-dashboard'
     | '/report'
+    | '/security-dashboard'
+    | '/user-dashboard'
   id:
     | '__root__'
     | '/'
@@ -208,10 +211,10 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/safety-map'
     | '/terms'
-    | '/_authenticated/dashboard'
-    | '/_authenticated/officer'
-    | '/_authenticated/principal'
+    | '/_authenticated/principal-dashboard'
     | '/_authenticated/report'
+    | '/_authenticated/security-dashboard'
+    | '/_authenticated/user-dashboard'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -315,25 +318,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TermsRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_authenticated/dashboard': {
-      id: '/_authenticated/dashboard'
-      path: '/dashboard'
-      fullPath: '/dashboard'
-      preLoaderRoute: typeof AuthenticatedDashboardRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/officer': {
-      id: '/_authenticated/officer'
-      path: '/officer'
-      fullPath: '/officer'
-      preLoaderRoute: typeof AuthenticatedOfficerRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/principal': {
-      id: '/_authenticated/principal'
-      path: '/principal'
-      fullPath: '/principal'
-      preLoaderRoute: typeof AuthenticatedPrincipalRouteImport
+    '/_authenticated/principal-dashboard': {
+      id: '/_authenticated/principal-dashboard'
+      path: '/principal-dashboard'
+      fullPath: '/principal-dashboard'
+      preLoaderRoute: typeof AuthenticatedPrincipalDashboardRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/report': {
@@ -343,21 +332,35 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedReportRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/security-dashboard': {
+      id: '/_authenticated/security-dashboard'
+      path: '/security-dashboard'
+      fullPath: '/security-dashboard'
+      preLoaderRoute: typeof AuthenticatedSecurityDashboardRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/user-dashboard': {
+      id: '/_authenticated/user-dashboard'
+      path: '/user-dashboard'
+      fullPath: '/user-dashboard'
+      preLoaderRoute: typeof AuthenticatedUserDashboardRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
   }
 }
 
 interface AuthenticatedRouteRouteChildren {
-  AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
-  AuthenticatedOfficerRoute: typeof AuthenticatedOfficerRoute
-  AuthenticatedPrincipalRoute: typeof AuthenticatedPrincipalRoute
+  AuthenticatedPrincipalDashboardRoute: typeof AuthenticatedPrincipalDashboardRoute
   AuthenticatedReportRoute: typeof AuthenticatedReportRoute
+  AuthenticatedSecurityDashboardRoute: typeof AuthenticatedSecurityDashboardRoute
+  AuthenticatedUserDashboardRoute: typeof AuthenticatedUserDashboardRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
-  AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
-  AuthenticatedOfficerRoute: AuthenticatedOfficerRoute,
-  AuthenticatedPrincipalRoute: AuthenticatedPrincipalRoute,
+  AuthenticatedPrincipalDashboardRoute: AuthenticatedPrincipalDashboardRoute,
   AuthenticatedReportRoute: AuthenticatedReportRoute,
+  AuthenticatedSecurityDashboardRoute: AuthenticatedSecurityDashboardRoute,
+  AuthenticatedUserDashboardRoute: AuthenticatedUserDashboardRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =
