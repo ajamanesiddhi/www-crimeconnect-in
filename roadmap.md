@@ -1,13 +1,11 @@
 # CrimeConnect Roadmap
 
-- [ ] Configure Lovable Cloud authentication and secure profile roles
-- [ ] Build premium responsive homepage
-- [ ] Build login, signup, and password recovery
-- [ ] Build User, Security Officer, and Principal dashboards
-- [ ] Build incident reporting with private uploads and GPS
-- [ ] Build privacy-preserving safety map
-- [ ] Add About, How It Works, Privacy, Terms, and Emergency Help pages
-- [ ] Validate responsive layout, access controls, loading, and errors
-- [ ] Harden incident evidence and review-note access policies
-- [ ] Audit role assignment and all privileged database functions
-- [ ] Run and review a fresh security scan before publishing
+- [x] Auth, profiles, roles, homepage, public pages
+- [x] Report form: camera/gallery, compression, GPS + map picker, address
+- [x] Principal real-time alerts, sound, acknowledge, test alert, detail view
+- [ ] Separate dashboards at /user-dashboard, /security-dashboard, /principal-dashboard with role guards
+- [ ] Status workflow NEW → UNDER REVIEW → VERIFIED → RESOLVED, review notes
+- [ ] Security Officer live list + incident details + actions + notifications
+- [ ] User dashboard: live My Reports + status
+- [ ] Demo accounts user/security/principal@crimeconnect.demo + sample incidents
+- [ ] FCM push (blocked: needs Firebase connection from user)
