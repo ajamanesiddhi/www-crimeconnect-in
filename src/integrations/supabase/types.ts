@@ -114,6 +114,10 @@ export type Database = {
           report_id: string
           reporter_id: string
           reporter_role: string
+          resolved_at: string | null
+          reviewed_at: string | null
+          reviewed_by: string | null
+          security_review_note: string | null
           status: Database["public"]["Enums"]["incident_status"]
           updated_at: string
         }
@@ -136,6 +140,10 @@ export type Database = {
           report_id?: string
           reporter_id: string
           reporter_role?: string
+          resolved_at?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          security_review_note?: string | null
           status?: Database["public"]["Enums"]["incident_status"]
           updated_at?: string
         }
@@ -158,6 +166,10 @@ export type Database = {
           report_id?: string
           reporter_id?: string
           reporter_role?: string
+          resolved_at?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          security_review_note?: string | null
           status?: Database["public"]["Enums"]["incident_status"]
           updated_at?: string
         }
@@ -341,7 +353,12 @@ export type Database = {
     }
     Enums: {
       app_role: "user" | "security_officer" | "principal" | "admin"
-      incident_status: "submitted" | "under_review" | "referred" | "resolved"
+      incident_status:
+        | "submitted"
+        | "under_review"
+        | "verified"
+        | "referred"
+        | "resolved"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -470,7 +487,13 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["user", "security_officer", "principal", "admin"],
-      incident_status: ["submitted", "under_review", "referred", "resolved"],
+      incident_status: [
+        "submitted",
+        "under_review",
+        "verified",
+        "referred",
+        "resolved",
+      ],
     },
   },
 } as const
