@@ -12,7 +12,7 @@ import { useLiveIncidents } from "@/lib/use-live-incidents";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/_authenticated/principal-dashboard")({
-  validateSearch: (s: Record<string, unknown>): { view?: string } => ({ view: typeof s["view"] === "string" ? (s["view"] as string) : undefined }),
+  validateSearch: (s: Record<string, unknown>): { view?: string | undefined } => ({ view: typeof s["view"] === "string" ? (s["view"] as string) : undefined }),
   beforeLoad: ({ context }) => { if (!context.roles.includes("principal") && !context.roles.includes("admin")) throw redirect({ to: homeFor(context.roles) }); },
   head: () => ({ meta: [{ title: "Principal Dashboard — CrimeConnect" }, { name: "description", content: "Institution-scoped incident monitoring with real-time alerts." }, { property: "og:title", content: "CrimeConnect Principal Dashboard" }, { property: "og:description", content: "Real-time incident alerts for authorized Principals." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" }] }),
   component: Page,

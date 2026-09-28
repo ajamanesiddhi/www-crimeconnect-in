@@ -13,7 +13,7 @@ import { homeFor, INCIDENT_COLS, STATUS_LABEL, type Incident } from "@/lib/incid
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/_authenticated/user-dashboard")({
-  validateSearch: (s: Record<string, unknown>): { view?: string } => ({ view: typeof s["view"] === "string" ? (s["view"] as string) : undefined }),
+  validateSearch: (s: Record<string, unknown>): { view?: string | undefined } => ({ view: typeof s["view"] === "string" ? (s["view"] as string) : undefined }),
   beforeLoad: ({ context }) => { const home = homeFor(context.roles); if (home !== "/user-dashboard") throw redirect({ to: home }); },
   head: () => ({ meta: [{ title: "My Dashboard — CrimeConnect" }, { name: "description", content: "Report incidents and track your private reports." }, { property: "og:title", content: "CrimeConnect User Dashboard" }, { property: "og:description", content: "Private report tracking workspace." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" }] }),
   component: Page,

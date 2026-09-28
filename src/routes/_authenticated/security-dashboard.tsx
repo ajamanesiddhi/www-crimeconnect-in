@@ -12,7 +12,7 @@ import { useLiveIncidents } from "@/lib/use-live-incidents";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/_authenticated/security-dashboard")({
-  validateSearch: (s: Record<string, unknown>): { view?: string } => ({ view: typeof s["view"] === "string" ? (s["view"] as string) : undefined }),
+  validateSearch: (s: Record<string, unknown>): { view?: string | undefined } => ({ view: typeof s["view"] === "string" ? (s["view"] as string) : undefined }),
   beforeLoad: ({ context }) => { if (!context.roles.includes("security_officer") && !context.roles.includes("admin")) throw redirect({ to: homeFor(context.roles) }); },
   head: () => ({ meta: [{ title: "Security Officer Dashboard — CrimeConnect" }, { name: "description", content: "Review, verify, and resolve incident reports." }, { property: "og:title", content: "CrimeConnect Security Dashboard" }, { property: "og:description", content: "Authorized incident review workspace." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" }] }),
   component: Page,
@@ -27,10 +27,10 @@ function Page() {
 
   async function update(inc: Incident, status: IncidentStatus | null) {
     const now = new Date().toISOString();
-    const patch: Record<string, unknown> = { reviewed_by: user.id, reviewed_at: now };
-    if (note.trim()) patch["security_review_note"] = note.trim().slice(0, 2000);
-    if (status) patch["status"] = status;
-    if (status === "resolved") patch["resolved_at"] = now;
+    const patch: import("@/integrations/supabase/types").Database["public"]["Tables"]["incidents"]["Update"] = { reviewed_by: user.id, reviewed_at: now };
+    if (note.trim()) patch.security_review_note = note.trim().slice(0, 2000);
+    if (status) patch.status = status;
+    if (status === "resolved") patch.resolved_at = now;
     const { error } = await supabase.from("incidents").update(patch).eq("id", inc.id);
     if (error) { toast.error(error.message); return; }
     await supabase.from("incident_reviews").insert({ incident_id: inc.id, reviewer_id: user.id, previous_status: inc.status, new_status: status ?? inc.status, notes: note.trim() || `Status changed to ${STATUS_LABEL[status ?? inc.status]}.` });
