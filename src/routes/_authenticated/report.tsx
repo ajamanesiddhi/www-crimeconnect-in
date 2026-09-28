@@ -100,12 +100,17 @@ function Page() {
     <DashboardShell role="user" title="Report Submitted" subtitle="College demonstration record">
       <div className="mx-auto max-w-xl rounded-lg border border-success/40 bg-success/10 p-8 text-center">
         <CheckCircle2 className="mx-auto size-14 text-success" />
-        <h2 className="mt-5 text-2xl font-extrabold">Demo report submitted securely</h2>
-        <p className="mt-3 text-muted-foreground">The authorized Principal has been alerted automatically.</p>
+        <h2 className="mt-5 text-2xl font-extrabold">Incident reported successfully.</h2>
+        <p className="mt-3 text-muted-foreground">The Principal and Security Officers have been alerted automatically.</p>
         <p className="mt-5 rounded-md bg-background p-4 font-display text-2xl font-bold text-primary">{reportId}</p>
+        <dl className="mt-4 grid gap-2 text-left text-sm">
+          <div><dt className="inline text-muted-foreground">Date/time: </dt><dd className="inline font-semibold">{new Date().toLocaleString()}</dd></div>
+          <div><dt className="inline text-muted-foreground">Location: </dt><dd className="inline font-semibold">{landmark} ({lat}, {lng})</dd></div>
+          <div><dt className="inline text-muted-foreground">Current status: </dt><dd className="inline font-semibold">New</dd></div>
+        </dl>
         <p className="mt-4 text-xs text-muted-foreground">This fictional allegation is pending authorized review and is not a verified crime.</p>
         {message && <p className="mt-3 text-sm">{message}</p>}
-        <Button asChild size="lg" className="mt-6"><Link to="/dashboard">Return to Dashboard</Link></Button>
+        <Button asChild size="lg" className="mt-6"><Link to="/user-dashboard" search={{ view: "reports" }}>Return to Dashboard</Link></Button>
       </div>
     </DashboardShell>
   );

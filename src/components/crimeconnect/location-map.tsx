@@ -2,7 +2,7 @@ import "leaflet/dist/leaflet.css";
 import { useEffect } from "react";
 import { CircleMarker, MapContainer, TileLayer, useMap, useMapEvents } from "react-leaflet";
 
-function ClickPicker({ onPick }: { onPick?: (lat: number, lng: number) => void }) {
+function ClickPicker({ onPick }: { onPick?: ((lat: number, lng: number) => void) | undefined }) {
   useMapEvents({ click: (e) => onPick?.(e.latlng.lat, e.latlng.lng) });
   return null;
 }
