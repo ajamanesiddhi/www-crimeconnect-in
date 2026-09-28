@@ -105,7 +105,7 @@ function Page() {
         <p className="mt-5 rounded-md bg-background p-4 font-display text-2xl font-bold text-primary">{reportId}</p>
         <p className="mt-4 text-xs text-muted-foreground">This fictional allegation is pending authorized review and is not a verified crime.</p>
         {message && <p className="mt-3 text-sm">{message}</p>}
-        <Button asChild size="lg" className="mt-6"><Link to="/dashboard">Return to Dashboard</Link></Button>
+        <Button asChild size="lg" className="mt-6"><Link to="/user-dashboard" search={{ view: "reports" }}>Return to Dashboard</Link></Button>
       </div>
     </DashboardShell>
   );
