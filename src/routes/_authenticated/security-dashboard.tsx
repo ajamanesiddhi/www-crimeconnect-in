@@ -12,7 +12,7 @@ import { useLiveIncidents } from "@/lib/use-live-incidents";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/_authenticated/security-dashboard")({
-  validateSearch: (s: Record<string, unknown>) => ({ view: typeof s["view"] === "string" ? (s["view"] as string) : "overview" }),
+  validateSearch: (s: Record<string, unknown>): { view?: string } => ({ view: typeof s["view"] === "string" ? (s["view"] as string) : undefined }),
   beforeLoad: ({ context }) => { if (!context.roles.includes("security_officer") && !context.roles.includes("admin")) throw redirect({ to: homeFor(context.roles) }); },
   head: () => ({ meta: [{ title: "Security Officer Dashboard — CrimeConnect" }, { name: "description", content: "Review, verify, and resolve incident reports." }, { property: "og:title", content: "CrimeConnect Security Dashboard" }, { property: "og:description", content: "Authorized incident review workspace." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" }] }),
   component: Page,
@@ -20,7 +20,7 @@ export const Route = createFileRoute("/_authenticated/security-dashboard")({
 
 function Page() {
   const { user } = Route.useRouteContext();
-  const { view } = Route.useSearch();
+  const view = Route.useSearch().view ?? "overview";
   const [selected, setSelected] = useState<Incident | null>(null);
   const [note, setNote] = useState("");
   const { incidents, notifs, unread, markRead, reload } = useLiveIncidents(user.id, (n) => toast.info(n.title, { description: n.message }));
