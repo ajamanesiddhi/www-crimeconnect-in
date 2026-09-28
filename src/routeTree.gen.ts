@@ -25,6 +25,7 @@ import { Route as AuthenticatedPrincipalDashboardRouteImport } from './routes/_a
 import { Route as AuthenticatedReportRouteImport } from './routes/_authenticated/report'
 import { Route as AuthenticatedSecurityDashboardRouteImport } from './routes/_authenticated/security-dashboard'
 import { Route as AuthenticatedUserDashboardRouteImport } from './routes/_authenticated/user-dashboard'
+import { Route as ApiPublicSeedDemoRouteImport } from './routes/api/public/seed-demo'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -108,6 +109,11 @@ const AuthenticatedUserDashboardRoute =
     path: '/user-dashboard',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const ApiPublicSeedDemoRoute = ApiPublicSeedDemoRouteImport.update({
+  id: '/api/public/seed-demo',
+  path: '/api/public/seed-demo',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -125,6 +131,7 @@ export interface FileRoutesByFullPath {
   '/report': typeof AuthenticatedReportRoute
   '/security-dashboard': typeof AuthenticatedSecurityDashboardRoute
   '/user-dashboard': typeof AuthenticatedUserDashboardRoute
+  '/api/public/seed-demo': typeof ApiPublicSeedDemoRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -142,6 +149,7 @@ export interface FileRoutesByTo {
   '/report': typeof AuthenticatedReportRoute
   '/security-dashboard': typeof AuthenticatedSecurityDashboardRoute
   '/user-dashboard': typeof AuthenticatedUserDashboardRoute
+  '/api/public/seed-demo': typeof ApiPublicSeedDemoRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -161,6 +169,7 @@ export interface FileRoutesById {
   '/_authenticated/report': typeof AuthenticatedReportRoute
   '/_authenticated/security-dashboard': typeof AuthenticatedSecurityDashboardRoute
   '/_authenticated/user-dashboard': typeof AuthenticatedUserDashboardRoute
+  '/api/public/seed-demo': typeof ApiPublicSeedDemoRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -180,6 +189,7 @@ export interface FileRouteTypes {
     | '/report'
     | '/security-dashboard'
     | '/user-dashboard'
+    | '/api/public/seed-demo'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -197,6 +207,7 @@ export interface FileRouteTypes {
     | '/report'
     | '/security-dashboard'
     | '/user-dashboard'
+    | '/api/public/seed-demo'
   id:
     | '__root__'
     | '/'
@@ -215,6 +226,7 @@ export interface FileRouteTypes {
     | '/_authenticated/report'
     | '/_authenticated/security-dashboard'
     | '/_authenticated/user-dashboard'
+    | '/api/public/seed-demo'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -230,6 +242,7 @@ export interface RootRouteChildren {
   ResetPasswordRoute: typeof ResetPasswordRoute
   SafetyMapRoute: typeof SafetyMapRoute
   TermsRoute: typeof TermsRoute
+  ApiPublicSeedDemoRoute: typeof ApiPublicSeedDemoRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -346,6 +359,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedUserDashboardRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/api/public/seed-demo': {
+      id: '/api/public/seed-demo'
+      path: '/api/public/seed-demo'
+      fullPath: '/api/public/seed-demo'
+      preLoaderRoute: typeof ApiPublicSeedDemoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -379,6 +399,7 @@ const rootRouteChildren: RootRouteChildren = {
   ResetPasswordRoute: ResetPasswordRoute,
   SafetyMapRoute: SafetyMapRoute,
   TermsRoute: TermsRoute,
+  ApiPublicSeedDemoRoute: ApiPublicSeedDemoRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
