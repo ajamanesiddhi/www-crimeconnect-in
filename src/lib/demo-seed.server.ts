@@ -1,7 +1,7 @@
-import { createServerFn } from "@tanstack/react-start";
+
 
 // One-time demo seeding. Removed after use.
-export const seedDemo = createServerFn({ method: "POST" }).handler(async () => {
+export async function seedDemo() {
   const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
   const { data: inst } = await supabaseAdmin.from("institutions").select("id").ilike("name", "D. Y. Patil%").limit(1).single();
   const accounts = [
@@ -41,4 +41,4 @@ export const seedDemo = createServerFn({ method: "POST" }).handler(async () => {
     }
   }
   return { ok: true };
-});
+}
