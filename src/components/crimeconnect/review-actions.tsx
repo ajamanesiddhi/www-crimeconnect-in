@@ -32,7 +32,7 @@ export function ReviewActions({ inc, userId, allowResolve, onChanged }: { inc: I
         <Button size="lg" variant="glass" disabled={busy || !note.trim()} onClick={() => update(null)}>Save Note</Button>
         <Button size="lg" disabled={busy || inc.status === "under_review"} onClick={() => update("under_review")}>Start Investigation</Button>
         <Button size="lg" variant="glass" disabled={busy || inc.status === "needs_evidence"} onClick={() => update("needs_evidence")}>Request More Evidence</Button>
-        <Button size="lg" className="bg-success text-success-foreground hover:bg-success/90" disabled={busy || inc.status === "verified"} onClick={() => update("verified")}>Mark as Verified</Button>
+        <Button size="lg" className="bg-success text-background hover:bg-success/90" disabled={busy || inc.status === "verified"} onClick={() => update("verified")}>Mark as Verified</Button>
         <Button size="lg" variant="destructive" disabled={busy || inc.status === "unverified"} onClick={() => update("unverified")}>Mark as Unverified</Button>
         {allowResolve && <Button size="lg" variant="premium" disabled={busy || inc.status === "resolved" || inc.status === "submitted"} onClick={() => update("resolved")}>Mark Resolved</Button>}
       </div>
