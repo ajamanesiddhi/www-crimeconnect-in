@@ -43,6 +43,13 @@
       "when": 1790654811683,
       "tag": "0005_ai_assessment",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1790654832795,
+      "tag": "0006_prepare_incident_clear_ai",
+      "breakpoints": true
     }
   ]
 }
