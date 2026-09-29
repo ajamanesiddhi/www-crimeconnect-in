@@ -6,6 +6,7 @@ import { MetricCard } from "@/components/crimeconnect/dashboard-parts";
 import { IncidentDetail, IncidentList } from "@/components/crimeconnect/incident-detail";
 import { NotificationsPanel } from "@/components/crimeconnect/notifications-panel";
 import { Button } from "@/components/ui/button";
+import { ReviewActions } from "@/components/crimeconnect/review-actions";
 import { supabase } from "@/integrations/supabase/client";
 import { beep, homeFor, STATUS_LABEL, type Incident, type IncidentStatus } from "@/lib/incidents";
 import { useLiveIncidents } from "@/lib/use-live-incidents";
@@ -133,11 +134,12 @@ function Page() {
       )}
 
       {selected && (
-        <IncidentDetail inc={selected} onClose={() => setSelected(null)}>
-          <div className="flex flex-wrap gap-3">
-            <Button size="lg" variant="destructive" disabled={!!selected.acknowledged_at} onClick={() => acknowledge(selected)}>{selected.acknowledged_at ? "Acknowledged" : "Acknowledge"}</Button>
-            <p className="self-center text-xs text-muted-foreground">Current status: <strong>{STATUS_LABEL[selected.status]}</strong> — status changes are made by Security Officers.</p>
+        <IncidentDetail inc={selected} onClose={() => setSelected(null)} showAi onOpenRelated={(id) => { const r = incidents.find((i) => i.id === id); if (r) setSelected(r); }}>
+          <div className="mb-4 flex flex-wrap items-center gap-3">
+            <Button size="lg" variant="destructive" disabled={!!selected.acknowledged_at} onClick={() => acknowledge(selected)}>{selected.acknowledged_at ? "Acknowledged" : "Acknowledge Alert"}</Button>
+            <p className="text-xs text-muted-foreground">Current status: <strong>{STATUS_LABEL[selected.status]}</strong></p>
           </div>
+          <ReviewActions inc={selected} userId={user.id} onChanged={(i) => { setSelected(i); reload(); }} />
         </IncidentDetail>
       )}
     </DashboardShell>

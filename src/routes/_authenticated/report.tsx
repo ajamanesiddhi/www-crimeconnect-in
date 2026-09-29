@@ -7,6 +7,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { supabase } from "@/integrations/supabase/client";
 import { compressImage } from "@/lib/image-compress";
+import { useServerFn } from "@tanstack/react-start";
+import { assessIncident } from "@/lib/assessment.functions";
 
 const LocationMap = lazy(() => import("@/components/crimeconnect/location-map"));
 const CATEGORIES = ["Theft", "Harassment", "Suspicious Activity", "Vandalism", "Assault", "Cyber Crime", "Other"];
@@ -30,8 +32,7 @@ function Page() {
   const [category, setCategory] = useState("Suspicious Activity");
   const [description, setDescription] = useState("");
   const [date, setDate] = useState(new Date().toISOString().slice(0, 16));
-  const [file, setFile] = useState<File | null>(null);
-  const [preview, setPreview] = useState("");
+  const [photos, setPhotos] = useState<{ file: File; url: string; status: "ready" | "uploading" | "uploaded" | "failed" }[]>([]);
   const [lat, setLat] = useState(16.7049);
   const [lng, setLng] = useState(74.2433);
   const [address, setAddress] = useState("");
@@ -41,17 +42,22 @@ function Page() {
   const [message, setMessage] = useState("");
   const [reportId, setReportId] = useState("");
   const [busy, setBusy] = useState(false);
+  const assess = useServerFn(assessIncident);
 
-  useEffect(() => () => { if (preview) URL.revokeObjectURL(preview); }, [preview]);
+  useEffect(() => () => { photos.forEach((p) => URL.revokeObjectURL(p.url)); }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
+  async function pickMany(list?: FileList | null) {
+    for (const f of Array.from(list ?? [])) await pick(f);
+  }
   async function pick(f?: File) {
     if (!f) return;
+    if (photos.length >= 5) { setMessage("You can attach up to 5 photos."); return; }
     if (!["image/jpeg", "image/png", "image/webp"].includes(f.type) || f.size > 15 * 1024 * 1024) { setMessage("Use a JPG, PNG, or WebP image (max 15 MB before compression)."); return; }
     const c = await compressImage(f);
     if (c.size > 5 * 1024 * 1024) { setMessage("Image is still larger than 5 MB after compression."); return; }
-    setFile(c); setPreview(URL.createObjectURL(c)); setMessage("");
+    setPhotos((l) => (l.length >= 5 ? l : [...l, { file: c, url: URL.createObjectURL(c), status: "ready" }])); setMessage("");
   }
-  function removePhoto() { setFile(null); setPreview(""); }
+  function removePhoto(i: number) { setPhotos((l) => { URL.revokeObjectURL(l[i]!.url); return l.filter((_, j) => j !== i); }); }
 
   async function setPoint(la: number, ln: number, fromGps = false) {
     setLat(Number(la.toFixed(6))); setLng(Number(ln.toFixed(6)));
@@ -87,12 +93,18 @@ function Page() {
       address: address || null, latitude: lat, longitude: lng, location_captured_at: capturedAt, is_demo: true, status: "submitted",
     }).select("id,report_id").single();
     if (error || !incident) { setMessage(error?.message ?? "The demo report could not be submitted."); setBusy(false); return; }
-    if (file) {
-      const path = `${user.id}/${incident.id}/${crypto.randomUUID()}.${file.type === "image/png" ? "png" : file.type === "image/webp" ? "webp" : "jpg"}`;
-      const up = await supabase.storage.from("incident-evidence").upload(path, file, { contentType: file.type, upsert: false });
-      if (!up.error) await supabase.from("incident_photos").insert({ incident_id: incident.id, uploader_id: user.id, storage_path: path, mime_type: file.type, size_bytes: file.size });
-      else setMessage("Report saved, but the photo could not be uploaded.");
+    let failed = 0;
+    for (let k = 0; k < photos.length; k++) {
+      const f = photos[k]!.file;
+      setPhotos((l) => l.map((p, j) => (j === k ? { ...p, status: "uploading" } : p)));
+      const path = `${user.id}/${incident.id}/${crypto.randomUUID()}.${f.type === "image/png" ? "png" : f.type === "image/webp" ? "webp" : "jpg"}`;
+      const up = await supabase.storage.from("incident-evidence").upload(path, f, { contentType: f.type, upsert: false });
+      if (!up.error) await supabase.from("incident_photos").insert({ incident_id: incident.id, uploader_id: user.id, storage_path: path, mime_type: f.type, size_bytes: f.size });
+      else failed++;
+      setPhotos((l) => l.map((p, j) => (j === k ? { ...p, status: up.error ? "failed" : "uploaded" } : p)));
     }
+    if (failed) setMessage(`Report saved, but ${failed} photo(s) could not be uploaded.`);
+    assess({ data: { incidentId: incident.id } }).catch(() => {});
     setReportId(incident.report_id); setBusy(false);
   }
 
@@ -101,7 +113,7 @@ function Page() {
       <div className="mx-auto max-w-xl rounded-lg border border-success/40 bg-success/10 p-8 text-center">
         <CheckCircle2 className="mx-auto size-14 text-success" />
         <h2 className="mt-5 text-2xl font-extrabold">Incident reported successfully.</h2>
-        <p className="mt-3 text-muted-foreground">The Principal and Security Officers have been alerted automatically.</p>
+        <p className="mt-3 text-muted-foreground">Your incident has been submitted and is awaiting authorized review.</p>
         <p className="mt-5 rounded-md bg-background p-4 font-display text-2xl font-bold text-primary">{reportId}</p>
         <dl className="mt-4 grid gap-2 text-left text-sm">
           <div><dt className="inline text-muted-foreground">Date/time: </dt><dd className="inline font-semibold">{new Date().toLocaleString()}</dd></div>
@@ -131,19 +143,24 @@ function Page() {
           {step === 2 && <div>
             <h2 className="text-xl font-bold">Capture / Upload Evidence Photo</h2>
             <p className="mt-2 rounded-md border border-primary/30 bg-primary/10 p-3 text-sm">Evidence photo is optional. Only upload relevant information.</p>
-            {preview ? (
-              <div className="mt-5">
-                <img src={preview} alt="Selected evidence preview" className="mx-auto max-h-72 rounded-md object-contain" />
-                <p className="mt-3 flex items-center gap-2 text-sm"><Camera className="size-4 text-success" />{file?.name} • {file ? Math.round(file.size / 1024) : 0} KB</p>
-                <div className="mt-4 grid gap-3 sm:grid-cols-2">
-                  <label className="flex h-14 cursor-pointer items-center justify-center gap-2 rounded-md border border-border bg-secondary font-semibold"><ImagePlus className="size-5" />Replace photo<input type="file" accept="image/jpeg,image/png,image/webp" className="sr-only" onChange={(e) => pick(e.target.files?.[0])} /></label>
-                  <Button type="button" variant="destructive" className="h-14 text-base" onClick={removePhoto}><Trash2 />Remove photo</Button>
-                </div>
+            {photos.length > 0 && (
+              <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-3">
+                {photos.map((p, i) => (
+                  <div key={p.url} className="relative overflow-hidden rounded-md border border-border bg-secondary">
+                    <img src={p.url} alt={`Evidence photo ${i + 1} preview`} className="h-32 w-full object-cover" />
+                    <div className="flex items-center justify-between gap-2 p-2 text-xs">
+                      <span className={p.status === "failed" ? "text-destructive" : p.status === "uploaded" ? "text-success" : "text-muted-foreground"}>{p.status === "ready" ? `Ready • ${Math.round(p.file.size / 1024)} KB` : p.status === "uploading" ? "Uploading…" : p.status === "uploaded" ? "✓ Uploaded" : "Failed"}</span>
+                      <button type="button" onClick={() => removePhoto(i)} disabled={busy} aria-label={`Remove photo ${i + 1}`} className="text-destructive"><Trash2 className="size-4" /></button>
+                    </div>
+                  </div>
+                ))}
               </div>
-            ) : (
-              <div className="mt-5 grid gap-3 sm:grid-cols-2">
-                <label className="flex h-28 cursor-pointer flex-col items-center justify-center gap-2 rounded-lg bg-primary font-bold text-primary-foreground"><Camera className="size-8" />Open Camera<input type="file" accept="image/*" capture="environment" className="sr-only" onChange={(e) => pick(e.target.files?.[0])} /></label>
-                <label className="flex h-28 cursor-pointer flex-col items-center justify-center gap-2 rounded-lg border border-dashed border-primary/50 bg-primary/5 font-bold"><ImagePlus className="size-8 text-primary" />Choose from Gallery<input type="file" accept="image/jpeg,image/png,image/webp" className="sr-only" onChange={(e) => pick(e.target.files?.[0])} /></label>
+            )}
+            <p className="mt-3 text-sm text-muted-foreground">{photos.length}/5 photos attached</p>
+            {photos.length < 5 && (
+              <div className="mt-3 grid gap-3 sm:grid-cols-2">
+                <label className="flex h-24 cursor-pointer flex-col items-center justify-center gap-2 rounded-lg bg-primary font-bold text-primary-foreground"><Camera className="size-7" />Open Camera<input type="file" accept="image/*" capture="environment" className="sr-only" onChange={(e) => { pick(e.target.files?.[0]); e.target.value = ""; }} /></label>
+                <label className="flex h-24 cursor-pointer flex-col items-center justify-center gap-2 rounded-lg border border-dashed border-primary/50 bg-primary/5 font-bold"><ImagePlus className="size-7 text-primary" />Upload Incident Photo<input type="file" multiple accept="image/jpeg,image/png,image/webp" className="sr-only" onChange={(e) => { pickMany(e.target.files); e.target.value = ""; }} /></label>
               </div>
             )}
             <p className="mt-4 text-xs text-muted-foreground">Photos are resized automatically and stored privately. Only you and authorized reviewers can view them.</p>
@@ -172,7 +189,7 @@ function Page() {
               <div className="rounded-md bg-secondary p-4"><dt className="text-muted-foreground">Incident</dt><dd className="mt-1 font-bold">{title} • {category}</dd></div>
               <div className="rounded-md bg-secondary p-4"><dt className="text-muted-foreground">Description</dt><dd className="mt-1 leading-6">{description}</dd></div>
               <div className="grid gap-4 sm:grid-cols-2">
-                <div className="rounded-md bg-secondary p-4"><dt className="text-muted-foreground">Evidence</dt><dd className="mt-1 font-bold">{file ? "1 private photo" : "No photo attached"}</dd></div>
+                <div className="rounded-md bg-secondary p-4"><dt className="text-muted-foreground">Evidence</dt><dd className="mt-1 font-bold">{photos.length ? `${photos.length} private photo${photos.length > 1 ? "s" : ""}` : "No photo attached"}</dd></div>
                 <div className="rounded-md bg-secondary p-4"><dt className="text-muted-foreground">Location</dt><dd className="mt-1 font-bold">{landmark}</dd><dd className="text-xs text-muted-foreground">{lat}, {lng}</dd></div>
               </div>
             </dl>

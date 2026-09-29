@@ -99,6 +99,7 @@ export type Database = {
           acknowledged_at: string | null
           acknowledged_by: string | null
           address: string | null
+          ai_assessment: Json | null
           category: string
           created_at: string
           description: string
@@ -125,6 +126,7 @@ export type Database = {
           acknowledged_at?: string | null
           acknowledged_by?: string | null
           address?: string | null
+          ai_assessment?: Json | null
           category?: string
           created_at?: string
           description: string
@@ -151,6 +153,7 @@ export type Database = {
           acknowledged_at?: string | null
           acknowledged_by?: string | null
           address?: string | null
+          ai_assessment?: Json | null
           category?: string
           created_at?: string
           description?: string
@@ -359,6 +362,8 @@ export type Database = {
         | "verified"
         | "referred"
         | "resolved"
+        | "unverified"
+        | "needs_evidence"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -493,6 +498,8 @@ export const Constants = {
         "verified",
         "referred",
         "resolved",
+        "unverified",
+        "needs_evidence",
       ],
     },
   },
