@@ -3,7 +3,7 @@ import { MapPin, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { StatusBadge } from "./status-badge";
 import { supabase } from "@/integrations/supabase/client";
-import { STATUS_LABEL, type Incident } from "@/lib/incidents";
+import { ALERT_META, STATUS_LABEL, type Incident } from "@/lib/incidents";
 import type { Assessment } from "@/lib/assessment.functions";
 import { Sparkles } from "lucide-react";
 
@@ -32,7 +32,7 @@ export function IncidentDetail({ inc, onClose, children, showAi = false, onOpenR
           <div>
             <p className="text-xs font-bold uppercase tracking-widest text-primary">{inc.report_id}{inc.is_demo && " • College demonstration"}</p>
             <h2 className="mt-1 text-2xl font-extrabold">{inc.incident_type}</h2>
-            <div className="mt-2 flex flex-wrap items-center gap-2"><StatusBadge status={STATUS_LABEL[inc.status]} /><span className="text-xs text-muted-foreground">{inc.category}</span>{inc.acknowledged_at && <span className="text-xs text-success">✓ Acknowledged by Principal</span>}</div>
+            <div className="mt-2 flex flex-wrap items-center gap-2"><AlertBadge level={inc.alert_level} /><StatusBadge status={STATUS_LABEL[inc.status]} /><span className="text-xs text-muted-foreground">{inc.category}</span>{inc.acknowledged_at && <span className="text-xs text-success">✓ Acknowledged by Principal</span>}</div>
           </div>
           <Button variant="ghost" size="icon" onClick={onClose} aria-label="Close"><X /></Button>
         </div>
@@ -61,9 +61,9 @@ export function IncidentList({ items, onOpen, empty }: { items: Incident[]; onOp
     <div className="overflow-hidden rounded-lg border border-border bg-card">
       {items.length === 0 && <p className="p-6 text-sm text-muted-foreground">{empty}</p>}
       {items.map((i) => (
-        <button key={i.id} onClick={() => onOpen(i)} className="flex w-full flex-wrap items-center justify-between gap-3 border-b border-border p-4 text-left last:border-0 hover:bg-accent">
+        <button key={i.id} onClick={() => onOpen(i)} className={`${i.alert_level === "high" && i.status !== "resolved" ? "border-l-4 border-l-destructive bg-destructive/5 " : ""}flex w-full flex-wrap items-center justify-between gap-3 border-b border-border p-4 text-left last:border-0 hover:bg-accent`}>
           <div className="min-w-0">
-            <p className="flex flex-wrap items-center gap-2 font-bold">{i.incident_type}{i.is_demo && <span className="rounded bg-secondary px-1.5 text-[10px] font-bold text-muted-foreground">DEMO</span>}{(i.incident_photos?.length ?? 0) > 0 && <span className="rounded bg-primary/15 px-1.5 text-[10px] font-bold text-primary">PHOTO</span>}</p>
+            <p className="flex flex-wrap items-center gap-2 font-bold"><AlertBadge level={i.alert_level} />{i.incident_type}{i.is_demo && <span className="rounded bg-secondary px-1.5 text-[10px] font-bold text-muted-foreground">DEMO</span>}{(i.incident_photos?.length ?? 0) > 0 && <span className="rounded bg-primary/15 px-1.5 text-[10px] font-bold text-primary">PHOTO</span>}</p>
             <p className="truncate text-xs text-muted-foreground">{i.report_id} • {i.landmark} • {new Date(i.created_at).toLocaleString()} • by {i.reporter_role.replace("_", " ")}</p>
           </div>
           <StatusBadge status={STATUS_LABEL[i.status]} />
@@ -102,4 +102,9 @@ export function AssessmentCard({ a, onOpenRelated }: { a: Assessment | null | un
       <p className="mt-4 rounded-md border border-destructive/30 bg-destructive/10 p-3 text-xs">AI cannot determine whether an incident is truly real or fake. This assessment only summarizes available evidence. AI assessment is supportive only. Final verification must be done by an authorized Principal or Security Officer.</p>
     </section>
   );
+}
+
+export function AlertBadge({ level }: { level: Incident["alert_level"] | undefined }) {
+  const m = ALERT_META[level ?? "low"];
+  return <span className={`inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[11px] font-extrabold ${m.badge}`}><span aria-hidden>{m.emoji}</span>{m.label}</span>;
 }
