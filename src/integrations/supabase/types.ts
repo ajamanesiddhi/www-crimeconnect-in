@@ -100,6 +100,7 @@ export type Database = {
           acknowledged_by: string | null
           address: string | null
           ai_assessment: Json | null
+          alert_level: string
           category: string
           created_at: string
           description: string
@@ -127,6 +128,7 @@ export type Database = {
           acknowledged_by?: string | null
           address?: string | null
           ai_assessment?: Json | null
+          alert_level?: string
           category?: string
           created_at?: string
           description: string
@@ -154,6 +156,7 @@ export type Database = {
           acknowledged_by?: string | null
           address?: string | null
           ai_assessment?: Json | null
+          alert_level?: string
           category?: string
           created_at?: string
           description?: string
