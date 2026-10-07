@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { AlertTriangle, Bell, BellOff, Building2, CheckCircle2, ClipboardCheck, Files, ShieldCheck, Siren } from "lucide-react";
 import { DashboardShell } from "@/components/crimeconnect/dashboard-shell";
 import { MetricCard } from "@/components/crimeconnect/dashboard-parts";
-import { IncidentDetail, IncidentList } from "@/components/crimeconnect/incident-detail";
+import { AlertBadge, IncidentDetail, IncidentList } from "@/components/crimeconnect/incident-detail";
 import { NotificationsPanel } from "@/components/crimeconnect/notifications-panel";
 import { Button } from "@/components/ui/button";
 import { ReviewActions } from "@/components/crimeconnect/review-actions";
@@ -81,6 +81,7 @@ function Page() {
               <div>
                 <p className="text-xs font-bold uppercase tracking-widest text-destructive">{alert.incident.is_demo ? "DEMO ALERT • College demonstration" : "Alert"}</p>
                 <h2 className="mt-1 text-2xl font-extrabold">🚨 NEW INCIDENT REPORT</h2>
+                <div className="mt-2"><AlertBadge level={alert.incident.alert_level} /></div>
                 <p className="mt-2 text-sm"><strong>Report ID:</strong> {alert.incident.report_id}</p>
                 <p className="text-sm"><strong>Incident:</strong> {alert.incident.incident_type}</p>
                 <p className="text-sm"><strong>Location:</strong> {alert.incident.address || alert.incident.landmark}</p>
